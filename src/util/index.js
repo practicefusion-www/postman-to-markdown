@@ -10,7 +10,7 @@ function createStructureOfMarkdown(docJson){
     let markdown = ''
 
     markdown += `# ${docJson.info.name}\n`
-    markdown += docJson.info.description !== undefined ? `${docJson.info.description || ''}\n` :``
+    markdown += docJson.info.description !== undefined ? `${docJson.info.description || ''}\n` :`\n`
     markdown += readItems(docJson.item)
 
     return markdown
@@ -33,7 +33,6 @@ function readAuthorization(auth){
             })
         }
         markdown += `\n`
-        markdown += `\n`
     }
 
     return markdown
@@ -54,7 +53,6 @@ function readRequestOptions(request){
             markdown += `|---|---|\n`
             markdown += `|${header.key}|${header.value}|\n`
             markdown += `\n`
-            markdown += `\n`
         })
     }
     return markdown
@@ -71,7 +69,6 @@ function readQueryParams(url){
             markdown += `|${query.key}|${query.value}|\n`
         })
         markdown += `\n`
-        markdown += `\n`
     }
 
     return markdown
@@ -87,10 +84,9 @@ function readFormDataBody(body) {
     if(body){
         if(body.mode === 'raw'){
             markdown += `### Body (**${body.mode}**)\n`
-            markdown += `\n`
-            markdown += `\`\`\`json\n`
+            markdown += `{% highlight json %}\n`
             markdown += `${body.raw}\n`
-            markdown += `\`\`\`\n`
+            markdown += `{% endhighlight %}\n`
             markdown += `\n`
         }
 
@@ -102,7 +98,6 @@ function readFormDataBody(body) {
             body.formdata.map(form =>{
                 markdown += `|${form.key}|${form.type === 'file' ? form.src : form.value !== undefined ? form.value.replace(/\\n/g,'') : '' }|${form.type}|\n`
             })
-            markdown += `\n`
             markdown += `\n`
         }
     }
@@ -119,9 +114,9 @@ function readResponse(responses) {
     if (responses?.length) {
         const response = responses[0];
         markdown += `### Response: ${response.code}\n`
-        markdown += `\`\`\`json\n`
+        markdown += `{% highlight json %}\n`
         markdown += `${response.body}\n`
-        markdown += `\`\`\`\n`
+        markdown += `{% endhighlight %}\n`
         markdown += `\n`
     }
     return markdown;
@@ -133,21 +128,18 @@ function readResponse(responses) {
  */
 function readMethods(method){
     let markdown = ''
-    
-    markdown += `\n`
-    markdown += method?.request?.description !== undefined ? `${method?.request?.description || ''}\n` :``
-    markdown += `### Method: ${method?.request?.method}\n`
-    markdown += `>\`\`\`\n`
-    markdown += `>${method?.request?.url?.raw}\n`
-    markdown += `>\`\`\`\n`
-    markdown += readRequestOptions(method?.request)
-    markdown += readFormDataBody(method?.request?.body)
-    markdown += readQueryParams(method?.request?.url)
-    markdown += readAuthorization(method?.request?.auth)
-    markdown += readResponse(method?.response)
-    markdown += `\n`
+    markdown += method.request.description !== undefined ? `${method.request.description || ''}\n\n` :`\n`
+    markdown += `### Method: ${method.request.method}\n`
+    markdown += `{% raw %}\n`
+    markdown += `\t${method.request.url.raw}\n`
+    markdown += `{% endraw %}\n\n`
+    markdown += readRequestOptions(method.request)
+    markdown += readFormDataBody(method.request.body)
+    markdown += readQueryParams(method.request.url)
+    markdown += readAuthorization(method.request.auth)
+    markdown += readResponse(method.response)
     markdown += `⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃\n`
-    
+    markdown += `\n`
     return markdown
 }
 
@@ -158,7 +150,7 @@ function readMethods(method){
 function readItems(items, folderDeep = 1) {
     let markdown = ''
     items.forEach(item => { 
-        markdown += `${'#'.repeat(folderDeep)} ${item.name} \n`
+        markdown += `${'#'.repeat(folderDeep)} ${item.name} \n\n`
         markdown += item.description !== undefined ? `${item.description || ''}\n`: ``
         markdown += `\n`
         if (item.item) {
