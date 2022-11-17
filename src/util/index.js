@@ -128,16 +128,16 @@ function readResponse(responses) {
  */
 function readMethods(method){
     let markdown = ''
-    markdown += method.request.description !== undefined ? `${method.request.description || ''}\n\n` :`\n`
-    markdown += `### Method: ${method.request.method}\n`
+    markdown += method?.request?.description !== undefined ? `${method?.request?.description || ''}\n\n` :`\n`
+    markdown += `### Method: ${method?.request?.method}\n`
     markdown += `{% raw %}\n`
-    markdown += `\t${method.request.url.raw}\n`
+    markdown += `\t${method?.request?.url?.raw}\n`
     markdown += `{% endraw %}\n\n`
-    markdown += readRequestOptions(method.request)
-    markdown += readFormDataBody(method.request.body)
-    markdown += readQueryParams(method.request.url)
-    markdown += readAuthorization(method.request.auth)
-    markdown += readResponse(method.response)
+    markdown += readRequestOptions(method?.request)
+    markdown += readFormDataBody(method?.request.body)
+    markdown += readQueryParams(method?.request.url)
+    markdown += readAuthorization(method?.request.auth)
+    markdown += readResponse(method?.response)
     markdown += `⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃\n`
     markdown += `\n`
     return markdown
