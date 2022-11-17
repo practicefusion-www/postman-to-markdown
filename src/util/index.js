@@ -9,7 +9,7 @@ const chalk = require(`chalk`)
 function createStructureOfMarkdown(docJson){
     let markdown = ''
 
-    markdown += `# Project: ${docJson.info.name}\n`
+    markdown += `# ${docJson.info.name}\n`
     markdown += docJson.info.description !== undefined ? `${docJson.info.description || ''}\n` :``
     markdown += readItems(docJson.item)
 
@@ -23,7 +23,7 @@ function createStructureOfMarkdown(docJson){
 function readAuthorization(auth){
     let markdown = ''
     if(auth){
-        markdown += `### 🔑 Authentication ${auth.type}\n`
+        markdown += `### Authentication ${auth.type}\n`
         markdown += `\n`
         markdown += `|Param|value|Type|\n`
         markdown += `|---|---|---|\n`
@@ -135,7 +135,6 @@ function readMethods(method){
     let markdown = ''
     
     markdown += `\n`
-    markdown += `## End-point: ${method.name}\n`
     markdown += method?.request?.description !== undefined ? `${method?.request?.description || ''}\n` :``
     markdown += `### Method: ${method?.request?.method}\n`
     markdown += `>\`\`\`\n`
@@ -159,8 +158,10 @@ function readMethods(method){
 function readItems(items, folderDeep = 1) {
     let markdown = ''
     items.forEach(item => { 
+        markdown += `${'#'.repeat(folderDeep)} ${item.name} \n`
+        markdown += item.description !== undefined ? `${item.description || ''}\n`: ``
+        markdown += `\n`
         if (item.item) {
-            markdown += `${'#'.repeat(folderDeep)} 📁 Collection: ${item.name} \n`
             markdown += readItems(item.item, folderDeep + 1)
         } else {
             markdown += readMethods(item)
