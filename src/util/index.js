@@ -134,9 +134,9 @@ function readMethods(method){
     markdown += `\t${method?.request?.url?.raw}\n`
     markdown += `{% endraw %}\n\n`
     markdown += readRequestOptions(method?.request)
-    markdown += readFormDataBody(method?.request.body)
-    markdown += readQueryParams(method?.request.url)
-    markdown += readAuthorization(method?.request.auth)
+    markdown += readFormDataBody(method?.request?.body)
+    markdown += readQueryParams(method?.request?.url)
+    markdown += readAuthorization(method?.request?.auth)
     markdown += readResponse(method?.response)
     markdown += `⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃\n`
     markdown += `\n`
