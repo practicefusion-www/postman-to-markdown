@@ -134,9 +134,20 @@ function readResponse(responses) {
             }
             markdown += `###### Response\n`
             if (response.code) {
-                markdown += `*${response.code} - ${response.status}*\n`
+                markdown += `**${response.code} - ${response.status}**\n`
+            }
+            if (response.header) {
+                markdown += `\n`
+                markdown += `**Headers**\n\n`
+                markdown += `|Param|Value|Description|Type|\n`
+                markdown += `|---|---|---|---|\n`
+                response.header.map(item =>{
+                    markdown += `|${item.key}|{% raw %}${item.value}{% endraw %}|${item.description || ''}|${item.type || ''}|\n`
+                })
+                markdown += `\n`
             }
             if (response.body) {
+                markdown += `**Body**\n\n`
                 markdown += `{% highlight json %}{% raw %}\n`
                 markdown += `${response.body}\n`
                 markdown += `{% endraw %}{% endhighlight %}\n`
