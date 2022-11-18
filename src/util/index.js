@@ -127,7 +127,6 @@ function readResponse(responses) {
             markdown += `### Response: ${response.name}\n`
             if (response.code) {
                 markdown += `*${response.code} - ${response.status}*\n`
-                markdown += `\n`
             }
             if (response.body) {
                 markdown += `{% highlight json %}{% raw %}\n`
