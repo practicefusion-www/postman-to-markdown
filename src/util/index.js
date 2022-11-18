@@ -24,12 +24,12 @@ function readAuthorization(auth){
     let markdown = ''
     if(auth){
         markdown += `### Authentication ${auth.type}\n`
-        markdown += `\n`
-        markdown += `|Param|value|Type|\n`
-        markdown += `|---|---|---|\n`
         if(auth.bearer){
+            markdown += `\n`
+            markdown += `|Param|Value|Type|\n`
+            markdown += `|---|---|---|\n`
             auth.bearer.map(auth =>{
-                markdown += `|${auth.key}|${auth.value}|${auth.type}|\n`
+                markdown += `|${auth.key}|{% raw %}${auth.value}{% endraw %}|${auth.type}|\n`
             })
         }
         markdown += `\n`
@@ -49,9 +49,9 @@ function readRequestOptions(request){
             request.header.map(header =>{
             markdown += `### Headers\n`
             markdown += `\n`
-            markdown += `|Content-Type|Value|\n`
-            markdown += `|---|---|\n`
-            markdown += `|${header.key}|${header.value}|\n`
+            markdown += `|Content-Type|Value|Type\n`
+            markdown += `|---|---|---|\n`
+            markdown += `|${header.key}|{% raw %}${header.value}{% endraw %}|${header.type}|\n`
             markdown += `\n`
         })
     }
@@ -63,10 +63,10 @@ function readQueryParams(url){
     if(url?.query){
         markdown += `### Query Params\n`
         markdown += `\n`
-        markdown += `|Param|value|\n`
-        markdown += `|---|---|\n`
+        markdown += `|Param|Value|Description|\n`
+        markdown += `|---|---|---|\n`
         url.query.map(query =>{
-            markdown += `|${query.key}|${query.value}|\n`
+            markdown += `|${query.key}|{% raw %}${query.value}{% endraw %}|${query.description || ''}|\n`
         })
         markdown += `\n`
     }
@@ -84,19 +84,30 @@ function readFormDataBody(body) {
     if(body){
         if(body.mode === 'raw'){
             markdown += `### Body (**${body.mode}**)\n`
-            markdown += `{% highlight json %}\n`
+            markdown += `{% highlight json %}{% raw %}\n`
             markdown += `${body.raw}\n`
-            markdown += `{% endhighlight %}\n`
+            markdown += `{% endraw %}{% endhighlight %}\n`
             markdown += `\n`
         }
 
-        if(body.mode === 'formdata'){
-            markdown += `### Body ${body.mode}\n`
+        if(body.mode === 'formdata') {
+            markdown += `### Body (**${body.mode}**)\n`
             markdown += `\n`
-            markdown += `|Param|value|Type|\n`
+            markdown += `|Param|Value|Type|\n`
             markdown += `|---|---|---|\n`
             body.formdata.map(form =>{
-                markdown += `|${form.key}|${form.type === 'file' ? form.src : form.value !== undefined ? form.value.replace(/\\n/g,'') : '' }|${form.type}|\n`
+                markdown += `|${form.key}|{% raw %}${form.type === 'file' ? form.src : form.value !== undefined ? form.value.replace(/\\n/g,'') : '' }{% endraw %}|${form.type}|\n`
+            })
+            markdown += `\n`
+        }
+
+        if(body.mode === 'urlencoded'){
+            markdown += `### Body (**${body.mode}**)\n`
+            markdown += `\n`
+            markdown += `|Param|Value|Description|Type|\n`
+            markdown += `|---|---|---|---|\n`
+            body.urlencoded.map(item =>{
+                markdown += `|${item.key}|{% raw %}${item.value}{% endraw %}|${item.description}|${item.type}|\n`
             })
             markdown += `\n`
         }
@@ -112,12 +123,19 @@ function readFormDataBody(body) {
 function readResponse(responses) {
     let markdown = ''
     if (responses?.length) {
-        const response = responses[0];
-        markdown += `### Response: ${response.code}\n`
-        markdown += `{% highlight json %}\n`
-        markdown += `${response.body}\n`
-        markdown += `{% endhighlight %}\n`
-        markdown += `\n`
+        responses.forEach(response => {
+            markdown += `### Response: ${response.name}\n`
+            if (response.code) {
+                markdown += `*${response.code} - ${response.status}*\n`
+                markdown += `\n`
+            }
+            if (response.body) {
+                markdown += `{% highlight json %}{% raw %}\n`
+                markdown += `${response.body}\n`
+                markdown += `{% endraw %}{% endhighlight %}\n`
+            }
+            markdown += `\n`
+        });
     }
     return markdown;
 }
