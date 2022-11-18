@@ -122,7 +122,7 @@ function readFormDataBody(body) {
  */
 function readResponse(responses) {
     let markdown = ''
-    markdown += `#### Examples\n`
+    markdown += `#### Examples\n\n`
     if (responses?.length) {
         responses.forEach(response => {
             markdown += `##### ${response.name}\n\n`
@@ -141,7 +141,8 @@ function readResponse(responses) {
                 markdown += `${response.body}\n`
                 markdown += `{% endraw %}{% endhighlight %}\n`
             } else {
-                markdown += `No response body`
+                markdown += `\n`
+                markdown += `No response body\n`
             }
             markdown += `\n`
         });
