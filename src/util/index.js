@@ -4,7 +4,7 @@ const chalk = require(`chalk`)
 /**
  * Create structure of markdown documentation
  * @param {object} docJson 
- * @return {strinf} structure of markdown
+ * @return {string} structure of markdown
  */
 function createStructureOfMarkdown(docJson){
     let markdown = ''
@@ -122,9 +122,17 @@ function readFormDataBody(body) {
  */
 function readResponse(responses) {
     let markdown = ''
+    markdown += `#### Examples\n`
     if (responses?.length) {
         responses.forEach(response => {
-            markdown += `### Response: ${response.name}\n`
+            markdown += `##### ${response.name}\n`
+            if (response.originalRequest) {
+                markdown += `###### Request\n`
+                markdown += `{% raw %}\n`
+                markdown += `\t ${response.originalRequest?.method} ${response.originalRequest?.url?.raw}\n`
+                markdown += `{% endraw %}\n`
+            }
+            markdown += `###### Response\n`
             if (response.code) {
                 markdown += `*${response.code} - ${response.status}*\n`
             }
@@ -132,6 +140,8 @@ function readResponse(responses) {
                 markdown += `{% highlight json %}{% raw %}\n`
                 markdown += `${response.body}\n`
                 markdown += `{% endraw %}{% endhighlight %}\n`
+            } else {
+                markdown += `No response body`
             }
             markdown += `\n`
         });
@@ -146,7 +156,7 @@ function readResponse(responses) {
 function readMethods(method){
     let markdown = ''
     markdown += method?.request?.description !== undefined ? `${method?.request?.description || ''}\n\n` :`\n`
-    markdown += `### Method: ${method?.request?.method}\n`
+    markdown += `##### Method: ${method?.request?.method}\n`
     markdown += `{% raw %}\n`
     markdown += `\t${method?.request?.url?.raw}\n`
     markdown += `{% endraw %}\n\n`
@@ -155,7 +165,7 @@ function readMethods(method){
     markdown += readQueryParams(method?.request?.url)
     markdown += readAuthorization(method?.request?.auth)
     markdown += readResponse(method?.response)
-    markdown += `⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃\n`
+    markdown += `-------------------------------------------\n`
     markdown += `\n`
     return markdown
 }
