@@ -125,7 +125,7 @@ function readResponse(responses) {
     markdown += `#### Examples\n`
     if (responses?.length) {
         responses.forEach(response => {
-            markdown += `##### ${response.name}\n`
+            markdown += `##### ${response.name}\n\n`
             if (response.originalRequest) {
                 markdown += `###### Request\n`
                 markdown += `{% raw %}\n`
