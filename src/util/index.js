@@ -9,8 +9,6 @@ const chalk = require(`chalk`)
 function createStructureOfMarkdown(docJson){
     let markdown = ''
 
-    markdown += `# ${docJson.info.name}\n`
-    markdown += docJson.info.description !== undefined ? `${docJson.info.description || ''}\n` :`\n`
     markdown += readItems(docJson.item)
 
     return markdown
